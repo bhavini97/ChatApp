@@ -13,7 +13,7 @@ module.exports={
 
         }catch(err){
             console.log('error occured while adding user',err)
-            return res.status(400).json({message:'something went wrong',err})
+            return res.status(400).json({message:err.message})
         }
     }
 }

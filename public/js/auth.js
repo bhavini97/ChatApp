@@ -22,6 +22,11 @@ async function signUpDetails(event) {
       console.log(res.data)
       event.target.reset();
     }).catch(err=>{
-        console.error('something went wrong while add form data to db(in auth.js signUpDetails)')
-    })
+        if (err.response) {
+           alert(err.response.data.message); 
+       } else {
+           console.error(`Error in sending signup data`, err);
+           alert('Something went wrong. Please try again.');
+       }
+  })
 }
