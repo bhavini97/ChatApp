@@ -2,12 +2,9 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const db = require("../config/db");
 const { Op } = require('sequelize');
-<<<<<<< HEAD
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-=======
->>>>>>> ce50632971f3148601644953e4e797b6ad7e9ef0
 
 module.exports = {
   // add user to user table (if not exist)
@@ -46,7 +43,6 @@ module.exports = {
       throw err;
     }
   },
-<<<<<<< HEAD
 
   loginUser: async(email,password)=>{
     
@@ -77,6 +73,4 @@ module.exports = {
       throw err;
    }
 }
-=======
->>>>>>> ce50632971f3148601644953e4e797b6ad7e9ef0
 };
