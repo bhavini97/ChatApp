@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 document.addEventListener('DOMContentLoaded', () => {
     const signUpForm = document.getElementById('signUp');
     if (signUpForm) {
@@ -12,6 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
  function signUpDetails(event) {
+=======
+
+document.addEventListener('DOMContentLoaded',()=>{
+    const signUpForm = document.getElementById('signUp');
+    signUpForm.addEventListener('submit',(event)=>signUpDetails(event));
+})
+async function signUpDetails(event) {
+>>>>>>> ce50632971f3148601644953e4e797b6ad7e9ef0
     event.preventDefault();
     const name = event.target.name.value;
     const email = event.target.email.value;
@@ -37,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
            alert('Something went wrong. Please try again.');
        }
   })
+<<<<<<< HEAD
 };
 
 function loginDetails(event){
@@ -59,3 +69,6 @@ function loginDetails(event){
       console.error('error while loggin in',err)
   })
 };
+=======
+}
+>>>>>>> ce50632971f3148601644953e4e797b6ad7e9ef0

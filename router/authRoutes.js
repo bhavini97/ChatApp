@@ -14,6 +14,9 @@ router.get('/login',(req,res)=>{
     res.sendFile(path.join(__dirname,"..","public","login.html"))
 })
 
+<<<<<<< HEAD
 router.post('/login',authCtrl.loginUser);
 
+=======
+>>>>>>> ce50632971f3148601644953e4e797b6ad7e9ef0
 module.exports = router;
