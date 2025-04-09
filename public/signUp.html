@@ -85,27 +85,27 @@
 </head>
 <body>
     <div class="container">
-        <form>
+        <form id="signUp">
             <h3>Sign Up</h3>
 
             <div class="form-group">
                 <label for="name">Enter Your Name:</label>
-                <input type="text" id="name" required />
+                <input type="text" id="name" name="name" required />
             </div>
 
             <div class="form-group">
                 <label for="email">Enter Your Email:</label>
-                <input type="email" id="email" required />
+                <input type="email" id="email" name="email" required />
             </div>
 
             <div class="form-group">
                 <label for="phone">Enter Your Contact Number:</label>
-                <input type="tel" id="phone" required />
+                <input type="tel" id="phone" name="phone" required />
             </div>
 
             <div class="form-group">
                 <label for="password">Enter Your Password:</label>
-                <input type="password" id="password" required />
+                <input type="password" id="password" name="password" required />
             </div>
 
             <button type="submit" class="btn-primary">Submit</button>
@@ -113,5 +113,6 @@
         </form>
     </div>
     
+    <script src="/js/auth.js"></script>
 </body>
 </html>
