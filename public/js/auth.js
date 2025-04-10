@@ -53,7 +53,7 @@ function loginDetails(event){
      }
      alert(res.data.message)
      event.target.reset();
-     window.location.href ='/auth/login'
+     window.location.href ='/chatRoom'
   }).catch(err=>{
       alert(err.response.data.message)
       console.error('error while loggin in',err)
