@@ -19,5 +19,21 @@ module.exports ={
             console.log(err)
            return res.status(500).json({message: err.message});
         }
+    },
+
+    getUserChat : async(req,res)=>{
+
+        const userId = req.user.userId;
+        if(!userId){
+            return res.status(400).json({message:'UserId not found for fetching user chat'})
+        }
+        try{
+           const result = await chat.getUserChat(userId);
+
+           return res.status(200).json({message:'chats received',chats: result})
+        }catch(err){
+           console.log(err);
+           return res.status(500).json({message:err.message})
+        }
     }
 }

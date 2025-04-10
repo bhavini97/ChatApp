@@ -10,5 +10,6 @@ router.get('/',(req,res)=>{
 });
 
 router.post('/',middleware,chatCtrl.addChatsToTable);
+router.get('/chats',middleware,chatCtrl.getUserChat);
 
 module.exports = router;
