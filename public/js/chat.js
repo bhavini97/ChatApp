@@ -15,4 +15,17 @@ function sendMessage() {
   chatBox.appendChild(messageElement);
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
+
+  axios.post('http://localhost:3000/chatRoom',
+    { message: message },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    }
+  ).then(res=>{
+      console.log(res.data.message)
+  }).catch(err=>{
+      console.error(err.response.data.message)
+  })
 }
