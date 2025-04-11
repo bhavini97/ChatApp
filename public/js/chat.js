@@ -2,17 +2,32 @@ const chatBox = document.getElementById("chatBox");
 const input = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 document.addEventListener('DOMContentLoaded',()=>{
-  setInterval(() => fetchMessage(), 1000);
-//fetchMessage();
+  //setInterval(() => fetchMessage(), 1000);
+  loadFromLocalStorage(); // Load cached messages
+   fetchMessage();
 })
+function loadFromLocalStorage() {
+  const cachedChats = JSON.parse(localStorage.getItem('chats')) || [];
+  displayMessage(cachedChats);
+}
 function fetchMessage(){
-axios.get('http://localhost:3000/chatRoom/chats',{
+  //getting chat from local storage
+  const cachedChats = JSON.parse(localStorage.getItem('chats')) || []; 
+  // taking the last id of the chat
+  const lastChatId = cachedChats.length ? cachedChats[cachedChats.length - 1].id : 0;
+axios.get(`http://localhost:3000/chatRoom/chats?after=${lastChatId}`,{
     headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
 }).then(res=>{
     //console.log(res.data.chats);
-    displayMessage(res.data.chats)
+    const newChats = res.data.chats || [];
+
+    // Update localStorage with new messages
+    const updatedChats = [...cachedChats, ...newChats].slice(-10); // Keep only latest 10
+    localStorage.setItem('chats', JSON.stringify(updatedChats));
+
+    displayMessage(newChats);
 }).catch(err=>{
    console.error('something went wrong while diplaying user chats',err)
 })

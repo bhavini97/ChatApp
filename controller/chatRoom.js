@@ -27,8 +27,9 @@ module.exports ={
         if(!userId){
             return res.status(400).json({message:'UserId not found for fetching user chat'})
         }
+        const afterId = parseInt(req.query.after);
         try{
-           const result = await chat.getUserChat(userId);
+           const result = await chat.getUserChat(userId,afterId);
 
            return res.status(200).json({message:'chats received',chats: result})
         }catch(err){

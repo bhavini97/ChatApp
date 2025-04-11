@@ -1,4 +1,5 @@
 const Chat = require('../models/chatMessage');
+const {Sequelize,Op} = require('sequelize');
 
 module.exports={
     addChatsToTable : async(message,userId)=>{
@@ -16,14 +17,19 @@ module.exports={
         }
     },
 
-    getUserChat : async(userId)=>{
+    getUserChat : async(userId,afterId)=>{
 
         try{
-            const userChats = await Chat.findAll({
-                where:{
-                    userId:userId
-                }
-            })
+            const whereClause = { userId: userId };
+    if (afterId && !isNaN(afterId)) {
+      whereClause.id = { [Sequelize.Op.gt]: afterId }; // only newer messages where id >last chat id
+    }
+
+    const userChats = await Chat.findAll({
+      where: whereClause,
+      order: [['id', 'ASC']] 
+    });
+
             return userChats;  
         }catch(err){
             throw new Error('couldn`t fetch user chats from table');
