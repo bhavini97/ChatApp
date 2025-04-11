@@ -117,9 +117,20 @@
                 <button type="button" class="btn btn-secondary">
                     <a href="/auth">New User? Sign Up</a>
                 </button>
+                <button type="button" class="btn btn-secondary" id="forgotPasswordLink">Forgot Password?Click Here
 
+                </button>
                 
             </form>
+        </div>
+         <!-- Forgot Password Section -->
+         <div class="forgot-container" id="forgotContainer">
+            <h3>Reset Password</h3>
+            <input type="email" id="email1" placeholder="Enter your email" required>
+            <button class="btn btn-primary" onclick="submitForgotPassword()">Submit</button>
+            <p class="message" id="responseMessage"></p>
+        </div>
+    </div>
         
             <script src="/js/auth.js"></script>
 
