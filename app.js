@@ -2,7 +2,10 @@ const express = require('express')
 const app = express();
 const cors = require('cors');
 const authRoutes = require('./router/authRoutes')
-const chatRoutes = require('./router/chatRoutes')
+const chatRoutes = require('./router/chatRoutes');
+const groupRoutes = require('./router/groupRoutes');
+const path = require('path');
+
 require('dotenv').config()
 
 
@@ -14,9 +17,10 @@ app.use(cors(
 ));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth',authRoutes);
 app.use('/chatRoom',chatRoutes)
+app.use('/groups',groupRoutes);
 
 app.listen(process.env.PORT)

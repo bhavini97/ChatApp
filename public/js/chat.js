@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   //setInterval(() => fetchMessage(), 1000);
   loadFromLocalStorage(); // Load cached messages
    fetchMessage();
+   fetchUserGroups();
 })
 function loadFromLocalStorage() {
   const cachedChats = JSON.parse(localStorage.getItem('chats')) || [];
@@ -70,4 +71,39 @@ const messageElement = document.createElement("div");
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
     });
+}
+
+document.getElementById('newGroupBtn').addEventListener('click',()=>{
+  window.location.href = '/groups/add-group';
+})
+
+function fetchUserGroups() {
+  axios.get('http://localhost:3000/groups/user-groups', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+  .then(response => {
+    const groups = response.data.groups || [];
+    console.log(groups)
+    const groupList = document.getElementById("groupList");
+    groupList.innerHTML = ""; // clear old
+
+    groups.forEach(group => {
+      const li = document.createElement("li");
+      li.className = "list-group-item group-item";
+      li.textContent = group.groupName;
+      li.style.cursor = "pointer";
+      li.onclick = () => switchToGroup(group.id);
+      groupList.appendChild(li);
+    });
+  })
+  .catch(error => {
+    console.error("Failed to load user groups", error);
+  });
+}
+
+function switchToGroup(groupId) {
+  localStorage.setItem("currentGroupId", groupId); // Save selected group
+  fetchMessage(); // reload messages for that group
 }

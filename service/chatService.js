@@ -20,16 +20,15 @@ module.exports={
     getUserChat : async(userId,afterId)=>{
 
         try{
-            const whereClause = { userId: userId };
-    if (afterId && !isNaN(afterId)) {
-      whereClause.id = { [Sequelize.Op.gt]: afterId }; // only newer messages where id >last chat id
-    }
+    
 
-    const userChats = await Chat.findAll({
-      where: whereClause,
-      order: [['id', 'ASC']] 
-    });
-
+      const userChats = await  Chat.findAll({
+        where: {
+          userId: userId, 
+          id: { [Op.gt]: afterId }
+        },
+        order: [['id', 'ASC']]
+      });
             return userChats;  
         }catch(err){
             throw new Error('couldn`t fetch user chats from table');
