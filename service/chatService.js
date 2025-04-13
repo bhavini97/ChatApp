@@ -2,12 +2,14 @@ const Chat = require('../models/chatMessage');
 const {Sequelize,Op} = require('sequelize');
 
 module.exports={
-    addChatsToTable : async(message,userId)=>{
-        
+    addChatsToTable : async(message,userId,group_id,username)=>{
+          console.log(group_id)
         try{
             const result = await Chat.create({
-                userId : userId,
-                messages : message
+                messages : message,
+                username:username,
+                sender_id : userId,
+                group_id : group_id
             });
         return result;
 
@@ -17,14 +19,14 @@ module.exports={
         }
     },
 
-    getUserChat : async(userId,afterId)=>{
+    getUserChat : async(afterId,group_id)=>{
 
         try{
     
 
       const userChats = await  Chat.findAll({
-        where: {
-          userId: userId, 
+        where: { 
+          group_id:group_id,
           id: { [Op.gt]: afterId }
         },
         order: [['id', 'ASC']]

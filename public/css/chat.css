@@ -40,7 +40,7 @@
   .message.you {
     background: #0084ff;
     color: white;
-    align-self: flex-end;
+    align-self: flex-start;
   }
 
   .input-container {

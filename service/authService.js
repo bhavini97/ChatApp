@@ -66,7 +66,7 @@ module.exports = {
      }
      
      // generate jwt token for client
-     const token = jwt.sign({userId : user.id},process.env.JWT_TOKEN)
+     const token = jwt.sign({userId : user.id,name:user.username},process.env.JWT_TOKEN)
      return token;
 
    }catch(err){

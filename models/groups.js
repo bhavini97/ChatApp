@@ -12,10 +12,6 @@ const Groups = sequelize.define('groups',{
     groupName:{
         type: DataTypes.STRING,
         allowNull: false
-    },
-    admin:{
-        type: DataTypes.INTEGER,
-        allowNull: false
     }
 })
 
