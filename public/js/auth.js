@@ -64,6 +64,13 @@ document.getElementById("forgotPasswordLink").addEventListener("click", function
   event.preventDefault();
   document.getElementById("forgotContainer").style.display = "block";
 });
+
+
+// forgrt password
+document.getElementById("forgotPasswordLink").addEventListener("click", function(event) {
+  event.preventDefault();
+  document.getElementById("forgotContainer").style.display = "block";
+});
 function submitForgotPassword(){
   const email = document.getElementById("email1").value;
   const messageBox = document.getElementById("responseMessage");
@@ -74,7 +81,7 @@ function submitForgotPassword(){
       return;
   }
 
-  axios.post("http://localhost:3000/auth/forgotpassword", { email })
+  axios.post("http://localhost:3000/auth/password/forgotpassword", { email })
       .then(response => {
           messageBox.style.color = "green";
           messageBox.innerText = response.data.message || "Email sent! Check your inbox.";
