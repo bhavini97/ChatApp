@@ -1,3 +1,4 @@
+const socket = io('http://localhost:3000'); // Connect to the server
 const chatBox = document.getElementById("chatBox");
 const input = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
@@ -6,6 +7,12 @@ const sendBtn = document.getElementById("sendBtn");
 document.addEventListener('DOMContentLoaded',()=>{
   //setInterval(() => fetchMessage(), 1000);  
   fetchUserGroups();
+  // Automatically join the group based on the current selected group
+  const currentGroupId = localStorage.getItem('currentGroupId');
+  if (currentGroupId) {
+    socket.emit('joinGroup', currentGroupId);
+  }
+  
 })
 
 function fetchUserGroups() {
@@ -63,6 +70,9 @@ function switchToGroup(groupId) {
   localStorage.setItem("currentGroupId", groupId); // Save selected group
 
   fetchMessage(groupId); // reload messages for that group
+
+   // Join the group on Socket.IO
+   socket.emit('joinGroup', groupId);
 }
 
 
@@ -116,6 +126,7 @@ function sendMessage() {
     }
   ).then(res=>{
       console.log(res.data.message)
+      socket.emit('sendMessage', groupId, message); // Broadcast to other users in the group
       fetchMessage(parseInt(localStorage.getItem("currentGroupId")))
   }).catch(err=>{
       console.error(err.response.data.message)
