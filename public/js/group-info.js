@@ -1,3 +1,5 @@
+
+
 const groupId = parseInt(localStorage.getItem('currentGroupId'))
     document.addEventListener("DOMContentLoaded", () => {
       fetchGroupMembers();
@@ -10,7 +12,17 @@ const groupId = parseInt(localStorage.getItem('currentGroupId'))
         }
       })
       .then(res => {
+        if (res.data.message === "Group deleted because no users left") {
+          alert("Group deleted. Redirecting to chat.");
+          window.location.href = "/chat.html";
+        }
         const { members, isAdmin } = res.data;
+        
+        if(!members){
+          alert('group deleted')
+          return;
+        }
+    
         const tbody = document.getElementById("membersTableBody");
         if (isAdmin) {
             document.getElementById('controls').style.display = 'block';

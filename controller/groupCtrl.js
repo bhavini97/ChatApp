@@ -17,7 +17,7 @@ module.exports={
           return res.status(201).json({ message: "Group created successfully!", group });
         } catch (error) {
           console.error("Error creating group:", error);
-          return res.status(500).json({ message: "Internal server error" });
+          return res.status(500).json({ message: error.message });
         }
       },
       

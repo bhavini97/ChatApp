@@ -13,10 +13,16 @@ module.exports={
       
         try {
           // Create a new group
-          const group = await Group.create({
-            groupName: groupName
-          }, { transaction });
-      
+          const [group, created] = await Group.findOrCreate({
+            where: { groupName },
+            defaults: { groupName },
+            transaction
+          });
+        
+          
+          if(!created){
+            throw new Error('Group with same name already exist')
+          }
         
           // Add creator to the group (they must always be added)
           await UserGroup.create({
@@ -26,11 +32,11 @@ module.exports={
           }, { transaction });
       
           // Add other members to the group
-          for (let phone of members) {
-            const user = await User.findOne({ where: { phone } });
+          for (let username of members) {
+            const user = await User.findOne({ where: { username } });
             
             if(!user){
-                throw new Error(`User with contact no : ${phone} doesn't exist `)
+                throw new Error(`User with name : ${username} doesn't exist `)
             }
       
             const [userGroup, created] = await UserGroup.findOrCreate({
@@ -75,6 +81,16 @@ module.exports={
          
       let admin = false;
       try{
+         // first Check if at least one user is in the group
+       const userExistsInGroup = await UserGroup.findOne({
+      where: { group_id: groupId }
+      });
+
+    // If no users found, delete the group
+    if (!userExistsInGroup) {
+      await Group.destroy({ where: { id: groupId } });
+      return { members: null, admin: false }; 
+    }
 
         // this is to find if the current user is admin or not
         const adminRecord = await UserGroup.findOne({
@@ -99,6 +115,7 @@ module.exports={
           },
           ]
         })
+        
         
         return {members,admin};
 

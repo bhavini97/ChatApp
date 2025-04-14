@@ -1,15 +1,15 @@
 function addNewMember() {
     const membersDiv = document.getElementById('members');
     const newInput = document.createElement('input');
-    newInput.type = 'tel';
-    newInput.className = 'phone';
+    newInput.type = 'text';
+    newInput.className = 'name';
     newInput.placeholder = 'Enter member mobile number';
     membersDiv.appendChild(newInput);
   }
 
   function addGroup() {
     const groupName = document.getElementById('groupName').value.trim();
-    const phones = Array.from(document.getElementsByClassName('phone')).map(el => el.value.trim()).filter(Boolean);
+    const names = Array.from(document.getElementsByClassName('name')).map(el => el.value.trim()).filter(Boolean);
 
     if (!groupName) {
       document.getElementById('message').textContent = "Group name is required!";
@@ -23,15 +23,19 @@ function addNewMember() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({ groupName, members: phones })
+      body: JSON.stringify({ groupName, members: names })
     })
     .then(res => res.json())
     .then(data => {
       document.getElementById('message').textContent = data.message || 'Group created successfully!';
-      window.location.href = '/chatRoom/'; 
+      setTimeout(() => {
+        window.location.href = '/chatRoom/';
+      }, 1000);
     })
     .catch(err => {
-      document.getElementById('message').textContent = 'Failed to create group!';
+
+      alert(err.message)
+      document.getElementById('message').textContent = err.message;
       console.error(err);
     });
   }
