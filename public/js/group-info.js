@@ -84,11 +84,11 @@ async function deleteUser(userId) {
   }
   
   function addNewMember() {
-    const phone = prompt("Enter phone number of the member to add:");
+    const name = prompt("Enter name of the member to add:");
   
-    if (!phone) return;
+    if (!name) return;
   
-    axios.post(`http://localhost:3000/groups/${groupId}/add-member`, { phone }, {
+    axios.post(`http://localhost:3000/groups/${groupId}/add-member`, { name }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }

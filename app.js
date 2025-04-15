@@ -7,7 +7,8 @@ const groupRoutes = require('./router/groupRoutes');
 const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
-const jwtMiddleware = require('./middleware/jwt');
+const verifyToken = require('./middleware/verifyToken');
+const saveMessage = require('./service/chatService');
 require('dotenv').config()
 
 
@@ -22,7 +23,6 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: 'http://127.0.0.1:5500',
-    methods: ['GET', 'POST'],
     credentials: true,
   },
 });
@@ -39,8 +39,6 @@ app.use('/chatRoom',chatRoutes)
 app.use('/groups',groupRoutes);
 
 
-// Use JWT middleware for HTTP routes
-app.use(jwtMiddleware);  // This middleware will automatically attach the user info to the req object
 
 // Socket.IO handling
 io.on('connection', (socket) => {
@@ -51,34 +49,54 @@ io.on('connection', (socket) => {
     return;
   }
 
-  // Use your existing JWT middleware to verify the token for socket connection
-  jwtMiddleware({ headers: { authorization: `Bearer ${token}` } }, {}, (err) => {
-    if (err) {
-      socket.emit('error', 'Invalid token');
-      return;
-    }
-
-    // Assuming that the decoded user info is available in the req.user object (from your JWT middleware)
-    const userId = socket.userId;  // Assuming `socket.userId` is set by your middleware
+  //  verify the token for socket connection
+  const decoded = verifyToken(token);
+  if (!decoded) {
+    socket.emit('error', 'Invalid token');
+    return;
+  }
+    
+    const userId = decoded.userId; 
+    const username = decoded.name;
 
     console.log(`User ${userId} connected`);
 
     // Event: User joins a group
     socket.on('joinGroup', (groupId) => {
-      socket.join(groupId);
+      socket.join(`group-${groupId}`); 
       console.log(`User ${userId} joined group ${groupId}`);
     });
 
     // Event: User sends a message
-    socket.on('sendMessage', (groupId, message) => {
+    socket.on('sendMessage', async (groupId, message) => {
       console.log(`User ${userId} sent message to group ${groupId}: ${message}`);
-      io.to(groupId).emit('receiveMessage', { userId, message });
+  
+      // Save message in database and broadcast
+      const savedMessage = await saveMessage.addChatsToTable(message, userId, groupId, username);
+  
+      const messageData = {
+        id: savedMessage.id,
+        messages: message,
+        username: username,
+        sender_id: userId,
+        groupId: parseInt(groupId),
+      };
+  
+      // Broadcast to all users in the group
+      io.to(`group-${groupId}`).emit('receiveMessage', messageData);
     });
-
-    // Disconnect event
+  
+    // Handle user disconnecting
     socket.on('disconnect', () => {
       console.log(`User ${userId} disconnected`);
     });
+    socket.on('leaveGroup', (groupId) => {
+      socket.leave(`group-${groupId}`);
+    });
   });
-});
-server.listen(process.env.PORT)
+
+  
+  // Start server
+  server.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });

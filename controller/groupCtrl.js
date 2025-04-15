@@ -82,13 +82,13 @@ module.exports={
      },
 
      addNewMember : async(req,res)=>{
-      const { phone } = req.body;
+      const { name } = req.body;
 
       const groupId = req.params.groupId;
 
       try{
 
-        const result = groupService.addNewMember(phone,groupId);
+        const result = groupService.addNewMember(name,groupId);
         res.status(200).json({ message: 'Member added successfully' });
 
       }catch(err){

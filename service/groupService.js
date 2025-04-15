@@ -154,10 +154,10 @@ module.exports={
       }
     },
 
-    addNewMember : async(phone,groupId)=>{
+    addNewMember : async(username,groupId)=>{
     
       try{
-        const newUser = await User.findOne({ where: { phone } });
+        const newUser = await User.findOne({ where: { username } });
 
     if (!newUser) throw new Error ( 'User not found' );
 

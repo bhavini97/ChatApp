@@ -16,7 +16,7 @@ module.exports ={
         }
         try{
           const result = await chat.addChatsToTable(message,userId,group_id,name);
-          return res.status(200).json({message: `Successfully added chat message`})
+          return res.status(200).json({ message: result });
         }catch(err){
             console.log(err)
            return res.status(500).json({message: err.message});
