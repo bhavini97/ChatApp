@@ -1,7 +1,9 @@
 const Group = require('../models/groups');
 const User = require('../models/user');
 const UserGroup = require('../models/UserAndGroups');
+const chats = require('../models/chatMessage');
 const sequelize = require('../config/db');
+const { where } = require('sequelize');
 
 module.exports={
       
@@ -85,10 +87,14 @@ module.exports={
        const userExistsInGroup = await UserGroup.findOne({
       where: { group_id: groupId }
       });
-
+      const remainingUsers = await UserGroup.findOne({ where: { group_id: groupId } });
     // If no users found, delete the group
-    if (!userExistsInGroup) {
+      if (!remainingUsers) {
+        
+        //this is will delete all the messages of the group
+        await   chats.destroy({where:{group_id:groupId}});
       await Group.destroy({ where: { id: groupId } });
+
       return { members: null, admin: false }; 
     }
 

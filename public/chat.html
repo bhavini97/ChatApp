@@ -14,7 +14,7 @@
 <body>
     <header>Chat App</header>
     <div class="main-container" style="display: flex; height: 90vh;">
-      <!-- Group Sidebar -->
+ 
       <div class="group-sidebar p-3 border-end" style="width: 250px; background-color: #f8f9fa;">
         <button id="newGroupBtn" class="btn btn-primary w-100 mb-3">New Group</button>
         <ul id="groupList" class="list-group">
@@ -27,9 +27,18 @@
       <!-- Messages will be appended here -->
     </div>
     
-    <div class="input-container">
-      <input type="text" id="messageInput" placeholder="Type a message...">
-      <button id="sendBtn">Send</button>
+    <div class="input-container d-flex align-items-center gap-2 p-2 border-top">
+      <input type="text" id="messageInput" class="form-control" placeholder="Type a message...">
+      
+
+      <label for="fileInput" class="btn btn-outline-secondary btn-sm mb-0" style="background-color: #f8f9fa;">
+        📎
+        <input type="file" id="fileInput" style="display: none;">
+      </label>
+
+      <button id="sendBtn" class="btn btn-primary btn-sm">Send</button>
+    </div>
+    
 
     </div>
   </div>

@@ -8,7 +8,6 @@ const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
 const verifyToken = require('./middleware/verifyToken');
-const saveMessage = require('./service/chatService');
 require('dotenv').config()
 
 
@@ -38,6 +37,7 @@ app.use('/auth',authRoutes);
 app.use('/chatRoom',chatRoutes)
 app.use('/groups',groupRoutes);
 
+app.set("io", io); 
 
 
 // Socket.IO handling
@@ -67,33 +67,16 @@ io.on('connection', (socket) => {
       console.log(`User ${userId} joined group ${groupId}`);
     });
 
-    // Event: User sends a message
-    socket.on('sendMessage', async (groupId, message) => {
-      console.log(`User ${userId} sent message to group ${groupId}: ${message}`);
-  
-      // Save message in database and broadcast
-      const savedMessage = await saveMessage.addChatsToTable(message, userId, groupId, username);
-  
-      const messageData = {
-        id: savedMessage.id,
-        messages: message,
-        username: username,
-        sender_id: userId,
-        groupId: parseInt(groupId),
-      };
-  
-      // Broadcast to all users in the group
-      io.to(`group-${groupId}`).emit('receiveMessage', messageData);
+      // Handle user disconnecting
+      socket.on('disconnect', () => {
+        console.log(`User ${userId} disconnected`);
+      });
+      socket.on('leaveGroup', (groupId) => {
+        socket.leave(`group-${groupId}`);
+      });
     });
   
-    // Handle user disconnecting
-    socket.on('disconnect', () => {
-      console.log(`User ${userId} disconnected`);
-    });
-    socket.on('leaveGroup', (groupId) => {
-      socket.leave(`group-${groupId}`);
-    });
-  });
+  
 
   
   // Start server

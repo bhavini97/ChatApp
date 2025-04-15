@@ -2,14 +2,15 @@ const Chat = require('../models/chatMessage');
 const {Sequelize,Op} = require('sequelize');
 
 module.exports={
-    addChatsToTable : async(message,userId,group_id,username)=>{
+    addChatsToTable : async(message,userId,group_id,username,isFile=false)=>{
           console.log(group_id)
         try{
             const result = await Chat.create({
                 messages : message,
                 username:username,
                 sender_id : userId,
-                group_id : group_id
+                group_id : group_id,
+                isFile:isFile
             });
         return result;
 

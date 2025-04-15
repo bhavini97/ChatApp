@@ -9,6 +9,7 @@ const Chats = sequelize.define("chats", {
   username:{type: DataTypes.STRING},
   sender_id: { type: DataTypes.INTEGER },
   group_id: { type: DataTypes.INTEGER },
+  isFile:{type:DataTypes.BOOLEAN}
  
 },{
   timestamps:false

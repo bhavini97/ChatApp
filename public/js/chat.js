@@ -34,15 +34,36 @@ socket.on('receiveMessage', (data) => {
 
 //  DISPLAY MESSAGES
 function displayMessage(messages) {
-  chatBox.innerHTML = '';
-  messages.forEach(msg => {
-    const messageElement = document.createElement("div");
-    messageElement.className = "message you";
-    messageElement.textContent = `${msg.username}: ${msg.messages}`;
-    chatBox.appendChild(messageElement);
-  });
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+  // chatBox.innerHTML = '';
+  // messages.forEach(msg => {
+  //   const messageElement = document.createElement("div");
+  //   messageElement.className = "message you";
+  //   messageElement.textContent = `${msg.username}: ${msg.messages}`;
+  //   chatBox.appendChild(messageElement);
+  // });
+  // chatBox.scrollTop = chatBox.scrollHeight;
+  
+    chatBox.innerHTML = '';
+    messages.forEach(msg => {
+      const messageElement = document.createElement("div");
+      messageElement.className = "message you";
+  
+      if (msg.isFile) {
+        const link = document.createElement("a");
+        link.style.background = 'white'
+        link.href = msg.messages;
+        link.target = "_blank";
+        link.textContent = `${msg.username} shared a file`;
+        messageElement.appendChild(link);
+      } else {
+        messageElement.textContent = `${msg.username}: ${msg.messages}`;
+      }
+  
+      chatBox.appendChild(messageElement);
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+  
 
 //  FETCH LAST 10 MESSAGES FOR GROUP
 function fetchMessage(groupId) {
@@ -79,7 +100,7 @@ sendBtn.addEventListener("click", () => {
       }
     }
   ).then(() => {
-    socket.emit('sendMessage', groupId, message);
+    // socket.emit('sendMessage', groupId, message);
     input.value = ""; // Clear input only here
   }).catch(err => {
     console.error('Send failed:', err);
@@ -145,4 +166,27 @@ function fetchUserGroups() {
 
 document.getElementById('newGroupBtn').addEventListener('click', () => {
   window.location.href = '/groups/add-group';
+});
+
+document.getElementById("fileInput").addEventListener("change", async function () {
+  const file = this.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("groupId", localStorage.getItem("currentGroupId"));
+
+  try {
+    const res = await axios.post("http://localhost:3000/chatRoom/uploads", formData, {
+      headers: {
+         Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("File uploaded:", res.data.fileUrl);
+  } catch (err) {
+    console.error("Upload failed", err);
+    alert("Upload failed");
+  }
 });
