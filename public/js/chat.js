@@ -152,6 +152,11 @@ function fetchUserGroups() {
       actionBtn.textContent = "i";
       actionBtn.onclick = (e) => {
         e.stopPropagation();
+        if(!localStorage.getItem("currentGroupId")){
+          alert("You have not selected any group.Click on group name to select")
+          window.location.href = `/chatRoom`;
+          return;
+        }
         window.location.href = `/groups/${group.id}`;
       };
 

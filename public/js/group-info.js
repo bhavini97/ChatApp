@@ -20,6 +20,8 @@ const groupId = parseInt(localStorage.getItem('currentGroupId'))
         
         if(!members){
           alert('group deleted')
+          localStorage.removeItem('currentGroupId');
+          localStorage.removeItem('chats');
           return;
         }
     

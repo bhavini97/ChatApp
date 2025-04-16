@@ -5,18 +5,15 @@ module.exports ={
     addChatsToTable : async(req,res)=>{
 
         const message = req.body.message;
-        const userId = req.user.userId;
         const name = req.user.name;
         const group_id = req.query.groupId;
         
         if(!message){
             return res.status(404).json({message:`didn't received msg from frontend`})
         }
-        if(!userId){
-            return res.status(404).json({message:`didn't received user id from req.header`})
-        }
+      
         try{
-          const result = await chat.addChatsToTable(message,userId,group_id,name);
+          const result = await chat.addChatsToTable(message,group_id,name);
           const io = req.app.get("io"); //  Access socket.io instance
           io.to(`group-${group_id}`).emit("receiveMessage", {
        groupId: parseInt(result.group_id),
@@ -51,7 +48,7 @@ module.exports ={
         try {
           const file = req.file;
           const groupId = req.body.groupId;
-          const userId = req.user.userId;
+          ///const userId = req.user.userId;
           const name = req.user.name;
       
           if (!file) return res.status(400).json({ message: "No file received" });
@@ -59,7 +56,7 @@ module.exports ={
           const fileUrl = await uploadToS3(file.buffer, file.originalname);
       
           // Save file as chat message (optional)
-          const savedMessage = await chat.addChatsToTable(fileUrl,userId,groupId,name,true);
+          const savedMessage = await chat.addChatsToTable(fileUrl,groupId,name,true);
             
           // Emit to group
           const io = req.app.get("io");

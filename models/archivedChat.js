@@ -3,7 +3,7 @@ const { DataTypes } = require("sequelize");
 const Group = require('./groups');
 
 
-const Chats = sequelize.define("chats", {
+const ArchiveChats = sequelize.define("archivechats", {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   messages: { type: DataTypes.STRING },
   username:{type: DataTypes.STRING},
@@ -15,8 +15,8 @@ const Chats = sequelize.define("chats", {
 });
 
 
-Group.hasMany(Chats);
-Chats.belongsTo(Group, { foreignKey: 'group_id' });
+Group.hasMany(ArchiveChats);
+ArchiveChats.belongsTo(Group, { foreignKey: 'group_id' });
 
 
-module.exports = Chats;
+module.exports = ArchiveChats;
